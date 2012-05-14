@@ -1,5 +1,7 @@
-# Default NAMESPACE created by R
-# Remove the previous line if you edit this file
-
-# Export all names
-exportPattern(".")
+export(ess)
+export(estvssamp)
+export(mcse.mat)
+export(mcse.q.mat)
+export(mcse.q)
+export(mcse)
+import(utils)
