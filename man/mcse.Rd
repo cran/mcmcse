@@ -97,6 +97,8 @@ mcse(x, g = g, method = "tukey")
   \code{\link{mcse.mat}}, which applies \code{mcse} to each
   column of a matrix or data frame.
 
+ \code{\link{mcse.multi}}, for a multivariate estimate of the Monte Carlo standard error.
+
   \code{\link{mcse.q}} and \code{\link{mcse.q.mat}}, which
   compute standard errors for quantiles.
 }

@@ -1,0 +1,78 @@
+\name{mcmcse-package}
+\alias{mcmcse-package}
+\alias{mcmcse}
+\docType{package}
+\title{
+Monte Carlo Standard Errors for MCMC
+}
+\description{
+Provides tools for computing Monte Carlo standard
+errors (MCSE) in Markov chain Monte Carlo (MCMC) settings. MCSE
+computation for expectation and quantile estimators is
+supported. The package also provides functions for computing
+effective sample size and for plotting Monte Carlo estimates
+versus sample size.
+}
+\details{
+\tabular{ll}{
+Package: \tab mcmcse\cr
+Type: \tab Package\cr
+Version: \tab 1.1.1\cr
+Date: \tab 2015-07-30\cr
+License: \tab GPL (>= 2)\cr
+}
+
+}
+\author{
+Dootika Vats
+
+Maintainer: James M. Flegal <jflegal@ucr.edu>
+}
+\references{
+  Flegal, J. M. (2012) Applicability of subsampling
+  bootstrap methods in Markov chain Monte Carlo. In
+  Wozniakowski, H. and Plaskota, L., editors, \emph{Monte
+  Carlo and Quasi-Monte Carlo Methods 2010} (to appear).
+  Springer-Verlag.
+
+  Flegal, J. M. and Jones, G. L. (2010) Batch means and
+  spectral variance estimators in Markov chain Monte Carlo.
+  \emph{The Annals of Statistics}, \bold{38}, 1034--1070.
+
+  Flegal, J. M. and Jones, G. L. (2011) Implementing Markov
+  chain Monte Carlo: Estimating with confidence. In Brooks,
+  S., Gelman, A., Jones, G. L., and Meng, X., editors,
+  \emph{Handbook of Markov Chain Monte Carlo}, pages
+  175--197. Chapman & Hall/CRC Press.
+
+  Flegal, J. M., Jones, G. L., and Neath, R. (2012) Markov
+  chain Monte Carlo estimation of quantiles.
+  \emph{University of California, Riverside, Technical
+  Report}.
+
+  Jones, G. L., Haran, M., Caffo, B. S. and Neath, R.
+  (2006) Fixed-width output analysis for Markov chain Monte
+  Carlo. \emph{Journal of the American Statistical
+  Association}, \bold{101}, 1537--1547.
+}
+
+\examples{
+library(mAr)
+p <- 3
+n <- 1e3
+omega <- 5*diag(1,p)
+
+## Making correlation matrix var(1) model
+set.seed(100)
+foo <- matrix(rnorm(p^2), nrow = p)
+foo <- foo \%*\% t(foo)
+phi <- foo / (max(eigen(foo)$values) + 1)
+  
+out <- as.matrix(mAr.sim(rep(0,p), phi, omega, N = n))
+
+mcse(out[,1], method = "bart")
+
+mcse.bm <- mcse.multi(x = out)
+mcse.tuk <- mcse.multi(x = out, method = "tukey")
+
+}

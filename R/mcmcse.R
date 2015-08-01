@@ -85,7 +85,7 @@ mcse = function(x, size = "sqroot", g = NULL, method = c("bm", "obm", "tukey", "
     if (method == "bm")
     {
         y = sapply(1:a, function(k) return(mean(g(x[((k - 1) * b + 1):(k * b)]))))
-        mu.hat = mean(y) 
+        mu.hat = mean(g(x)) 
         var.hat = b * sum((y - mu.hat)^2) / (a - 1)
         se = sqrt(var.hat / n)
     }
@@ -337,34 +337,50 @@ estvssamp = function(x, g = mean, main = "Estimates vs Sample Size", add = FALSE
 #' Geyer, C. J. (1992) Practical Markov chain Monte Carlo. \emph{Statistical Science}, \bold{7}, 473--483.
 #' @export
 
-ess = function(x, imse = TRUE, verbose = FALSE)
-{
-    if (imse)
-    {
-        chain.acov = acf(x, type = "covariance", plot = FALSE)$acf
-        len = length(chain.acov)
-        gamma.acov = chain.acov[1:(len - 1)] + chain.acov[2:len]
-        k = 1
-        while (k < length(gamma.acov) && gamma.acov[k + 1] > 0 && gamma.acov[k] >= gamma.acov[k + 1])
-            k = k + 1
-        if (verbose)
-            cat("truncated after ", k, " lags\n")
-        if (k == length(gamma.acov) && verbose)
-            warning("may need to compute more autocovariances/autocorrelations for ess")
-        if (k == 1)
-            time = 1
-        else
-        {
-            chain.acor = acf(x, type = "correlation", plot = FALSE)$acf
-            time = 1 + 2 * sum(chain.acor[2:k])
-        }
-    }
-    else
-    {
-        chain.acor = acf(x, type = "correlation", plot = FALSE)$acf
-        time = 1 + 2 * sum(chain.acor[-1])
-    }
-    length(x) / time
-}
+# ess = function(x, imse = TRUE, verbose = FALSE)
+# {
+#     if (imse)
+#     {
+#         chain.acov = acf(x, type = "covariance", plot = FALSE)$acf
+#         len = length(chain.acov)
+#         gamma.acov = chain.acov[1:(len - 1)] + chain.acov[2:len]
+#         k = 1
+#         while (k < length(gamma.acov) && gamma.acov[k + 1] > 0 && gamma.acov[k] >= gamma.acov[k + 1])
+#             k = k + 1
+#         if (verbose)
+#             cat("truncated after ", k, " lags\n")
+#         if (k == length(gamma.acov) && verbose)
+#             warning("may need to compute more autocovariances/autocorrelations for ess")
+#         if (k == 1)
+#             time = 1
+#         else
+#         {
+#             chain.acor = acf(x, type = "correlation", plot = FALSE)$acf
+#             time = 1 + 2 * sum(chain.acor[2:k])
+#         }
+#     }
+#     else
+#     {
+#         chain.acor = acf(x, type = "correlation", plot = FALSE)$acf
+#         time = 1 + 2 * sum(chain.acor[-1])
+#     }
+#     length(x) / time
+# }
 
+ess <- function(x, g = NULL)
+{
+    chain <- as.matrix(x)
+
+    if (is.function(g)) 
+        chain <- t(apply(x, 1, g))
+
+    n <- dim(chain)[1]
+    p <- dim(chain)[2]
+
+    lambda <- apply(chain, 2, var)
+
+    sigma <- (mcse.mat(chain)[,2])^2*n
+
+    return(n*lambda/sigma)
+}
 

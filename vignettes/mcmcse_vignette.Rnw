@@ -1,0 +1,260 @@
+%% How to compile by hand, not in package: 
+% R --vanilla
+% library(knitr)
+% knit("intro.Rnw")
+%knit2pdf("intro.Rnw")
+%do not ever type .tex!!!!
+
+%after creating intro.pdf:
+%comment out the first code chunk (options)
+%delete .bbl and .blg files
+%copy the pdf to inst/doc
+%build
+%R CMD check --as-cran
+%ship
+
+\documentclass[11pt]{article}
+
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Using mcmcse}
+%\VignettePackage{mcmcse}
+%\VignetteKeywords{Markov chain Monte Carlo, batch means}
+
+\usepackage{amsmath}
+\usepackage[sort,longnamesfirst]{natbib}
+\usepackage{verbatim}   % useful for program listings
+\usepackage{amsfonts}
+\usepackage[small,compact]{titlesec} 
+\title{An Introduction to Estimating Monte Carlo Standard Errors with R Package \texttt{mcmcse} }
+\author{Dootika Vats}
+\begin{document}
+
+\maketitle
+\setlength\parindent{0pt}
+\tableofcontents
+
+\break
+\section{Introduction}
+The R package \texttt{mcmcse} provides estimates of Monte Carlo standard errors for Markov chain Monte Carlo (MCMC) algorithms. This package is useful when estimating means and quantiles of functions of the MCMC output. In addition to MCMC output, the package can be used for time series and other correlated processes. 
+
+The package is predominantly useful after MCMC output has been obtained by the user. In addition to estimating the Monte Carlo standard errors, the package also provides basic graphical diagnostics and calculation of effective sample size. Various features in the package can be implemented using both multivariate and univariate methods. 
+
+<<noname,echo=FALSE>>=
+# opts_chunk$set(comment=NA,background='white')
+@
+
+\bigskip
+\section{An MCMC Example}
+
+To illustrate the use of our package, we present the following simple multivariate AR(1) process. The process is defined for $t = 1, 2, 3, \dots$ is defined as,
+\[y_t = w + A y_{t-1} + \epsilon_t, \]
+
+where $w$ is a constant vector in $\mathbb{R}^p$, $y_t \in \mathbb{R}^p$, $A$ is a $p \times p$ matrix and $\epsilon_t \sim N_p(0, C)$. In our example, we let $A$ and $C$ be diagonal matrices. The invariant distrbution for this process is $F = N_p(0, V)$ where $V$ is a function of $A$ and $C$. 
+
+The function \texttt{mAr.sim} in package \texttt{mAr} draws samples from the above model. We let $p = 3$.
+
+<<var>>=
+library(mAr)
+p <- 3
+A <- diag(c(.1, .5, .8))
+C <- diag(rep(2, 3))
+
+set.seed(100)
+chain <- mAr.sim(w = rep(2,p), A = A, C = C, N = 10000)
+@
+
+For using the \texttt{mcmcse} package the rows of the MCMC output should store each iteration of the algorithm. Thus the output should have $n$ rows and $p$ columns. We will denote each row $i$ of the out put as $(y^{(1)}_i, y^{(2)}_i, y^{(3)}_i)$.
+
+\bigskip
+This vignette will discuss estimating two sets of features of interest of $F$.
+\begin{itemize}
+	\item the expectation of $y$, $E_F y$
+	\item the expectation of sum of the second moments of all components of $y$, $E_F (y^{(1)2} + y^{(2)2} + y^{(3)2})$.
+\end{itemize}
+
+Suppose first we are interested in estimating $\mu = E_Fy$. Then the estimator for that is just the sample mean
+\[ \mu_n = \dfrac{1}{n} \displaystyle \sum_{t=1}^{n} y_t.\]
+
+$\mu_n$ is obtained using the usual \texttt{colMeans} function.
+
+<<means>>=
+ colMeans(chain)
+@
+
+Due to a central limit theorem argument,
+\begin{equation}
+\label{eq:clt}
+\sqrt{n}(\mu_n - \mu) \overset{d}{\to} N_p(0, \Sigma).
+\end{equation}
+
+Alternatively, we could also be interested in estimating say the sum of the second moments of each component of $y$. In this case, we define the function $g: \mathbb{R}^3 \to \mathbb{R}$ as $g((x_1,x_2,x_3)) = x_1^2 + x_2^2 + x_3^2$. This is defined in \texttt{R} by creating a function that takes a vector argument.
+
+<<g>>=
+g <- function(x)
+{
+	return(sum(x^2))
+}
+@
+
+The Monte Carlo estimate for $g$ is 
+\[ \mu_{g,n} = \dfrac{1}{n} \displaystyle \sum_{t=1}^{n} g(y_t),\]
+
+and a CLT of the following form may be available
+\begin{equation}
+\label{eq:g_clt}
+\sqrt{n}(\mu_{g,n} - \mu) \overset{d}{\to} N_p(0, \Sigma_g).
+\end{equation}
+
+
+Finding the estimate and the Monte Carlo standard errors for $E_F g$ are explained in the following section.
+
+
+\bigskip
+\section{Estimating Monte Carlo Standard Error}
+
+Using the \texttt{mcmcse} package we can estimate $\Sigma$ in \eqref{eq:clt} with the \texttt{mcse.multi} function. 
+
+<<mcse>>=
+library(mcmcse)
+mcerror_bm <- mcse.multi(x = chain, method =  "bm", 
+	size = "sqroot", g = NULL, level = .95, large = FALSE)
+mcerror_bart <- mcse.multi(x = chain, method =  "bartlett", 
+	size = "cuberoot", g = NULL, level = .95, large = FALSE)
+mcerror_tuk <- mcse.multi(x = chain, method =  "tukey", 
+	size = "sqroot", g = NULL, level = .95, large = FALSE)
+@
+
+\begin{itemize}
+	\item \texttt{x} takes the $n \times p$ MCMC data. \texttt{x} can take only numeric entries in the form of a matrix or data frame. The rows of \texttt{x} are the iterations of the MCMC.
+
+	\item \texttt{method = ``bm'', ``bartlett'', ``tukey''} calculates the estimate using the batch means method and spectral variance methods with the modified-Bartlett and Tukey-Hanning windows.
+
+	\item \texttt{size} is the batch size for the \texttt{bm} method and the truncation point for \texttt{tukey} and \texttt{bartlett} methods.  \texttt{size = ``sqroot''} sets the size as $\lfloor \sqrt{n} \rfloor$ and \texttt{size = ``cuberoot''} sets it at $\lfloor n^{1/3} \rfloor$. An integer value of \texttt{size} less than $n$ is also valid.
+
+	\item \texttt{g} is a function that is applied to each row of \texttt{x} and represents the features of interest of the process. Since here we are interested in only means, \texttt{g} is \texttt{NULL}. \texttt{g} will be explained in later examples.
+
+	\item \texttt{level} is the confidence level of the resulting confidence region. This is required to calculate the volume of the confidence region.
+
+	\item \texttt{large} is a logical argument. If \texttt{large} is \texttt{TRUE} the volume of the confidence region is the large sample volume obtained using $\chi^2$ critical values. By default, volume is calculated using $F$ distribution critical values.
+\end{itemize}
+
+\texttt{mcse.multi} returns a list with multiple components. \texttt{cov} stores the estimate of $\Sigma$ obtained using the method chosen, \texttt{vol} returns the volume to the $p$th root of the resulting confidence region, \texttt{est} stores the estimate of $g$ applied on the Markov chain and \texttt{nsim}, \texttt{critical} and \texttt{size} are useful to remember the methods used to calculate $\Sigma$. 
+
+<<outputvalue>>=
+mcerror_bm$cov
+
+mcerror_bart$cov
+
+mcerror_tuk$cov
+
+rbind(mcerror_bm$est, mcerror_bart$est, mcerror_tuk$est)
+
+c(mcerror_bm$vol, mcerror_bart$vol, mcerror_tuk$vol)
+@
+
+\textbf{Note: }The estimates are not affected by the choice of the method.
+
+\bigskip
+\textbf{Note: }The batch means estimators are significantly faster to calculate than the spectral variance estimators. The user is advised to use the default \texttt{method = ``bm''} for large input matrices.
+
+\bigskip
+\textbf{Note: }\texttt{cov} returns an estimate of $\Sigma$ and not $\Sigma/n$. 
+
+\bigskip
+If the diagonals of $\Sigma$ are $\sigma_{ii}^2$, the function \texttt{mcse} and \texttt{mcse.mat} returns $\sigma_{ii}/\sqrt{n}$. \texttt{mcse} does it for one component and \texttt{mcse.mat} does it for all diagonals.
+
+<<uni>>=
+mcse(x = chain[,1], method = "bm", g = NULL)
+mcse.mat(x = chain, method = "bm", g = NULL)
+@
+
+
+In order to estimate $\mu_{n,g}$ and $\Sigma_g$ as in \eqref{eq:g_clt}, we use the \texttt{R} function \texttt{g} we had defined before. Recall that \texttt{g} should be a funcation that takes vector inputs.
+
+<<sigma_g>>=
+g
+mcerror_g_bm <- mcse.multi(x = chain, g = g)
+
+mcerror_g_bm$cov
+
+mcerror_g_bm$est
+@
+
+\bigskip
+\section{Confidence Regions}
+
+Using the function \texttt{confRegion} in the package, the user can create joint confidence regions for two parameters. The input for this function is the output list from the \texttt{mcse.multi} function. The function uses the attributes \texttt{critical}, \texttt{est} and \texttt{nsim} from the \texttt{mcse.multi} output list.
+
+<<confRegion, out.height = '8cm'>>=
+plot(confRegion(mcerror_bm, which = c(1,2), level = .90), type = 'l', asp = 1)
+lines(confRegion(mcerror_bart, which = c(1,2), level = .90), col = "red")
+@
+
+\begin{itemize}
+	\item \texttt{which} should be a vector of size 2 that indicates the two components for which the confidence ellipse is to be constructed.
+
+	\item \texttt{level} is the confidence level of the confidence region. The default is .95
+\end{itemize}
+
+\bigskip
+\textbf{NOTE: }The argument  \texttt{confRegion} calls on the function \texttt{ellipse} in package \texttt{ellipse} to draw the ellipse.
+
+\bigskip
+\textbf{NOTE: } Since the confidence region is created for two parameters only, the size of the ellipse is determined by setting $p = 2$ irrespective of the original dimension of the problem.
+
+\bigskip
+To determine the effect of the confidence level, we draw two regions with difference confidence levels.
+
+<<comp_region, out.height = '8cm'>>=
+plot(confRegion(mcerror_bm, which = c(1,2), level = .95), type = 'l', asp = 1)
+lines(confRegion(mcerror_bm, which = c(1,2), level = .90), col = "red")
+@
+
+\section{Effective Sample Size}
+
+\texttt{multiESS} and \texttt{ess} are two functions that calculate the effective sample size of a correlated sample. \texttt{ess} calculations are based on \cite{gong2015practical} and is component-wise, and \texttt{multiESS} utilizes the multivariate nature of the problem.
+
+<<ess>>=
+ess(chain)
+@
+
+Since \texttt{ess} produces a different estimate for each component, conservative practice dictates choosing the smallest of the values. \texttt{multiESS} returns one estimate of the effective sample size based on the whole sample. The function calls \texttt{mcse.multi} function to obtain a batch means estimate of $\Sigma$. The user can provide another estimate of $\Sigma$ using the \texttt{covmat} argument.
+
+<<multiess>>=
+multiESS(chain)
+multiESS(chain, covmat = mcerror_bart$cov)
+@
+
+\section{Graphical Diagnostics}
+
+The function \texttt{estvssamp} plots the Monte Carlo estimates versus the sample size for a component of the MCMC output. This plot indicates whether the Monte Carlo estimate has stabilized.
+
+<<estvssamp, out.width = '8cm'>>=
+estvssamp(chain[,1])
+@
+
+Additionally, if $p$ is not too small, due to the central limit theorem in \eqref{eq:clt} and an estimate of $\Sigma$ using the \texttt{mcse.multi} function, a QQ plot of the standardized estimates gives an idea of whether asymptopia has been achieved.
+
+We generate a new Markov chain with $p = 50$.
+
+<<qqbig>>=
+p <- 50
+A <- diag(seq(.1, .9, length = p))
+C <- diag(rep(2, p))
+
+set.seed(100)
+chain <- mAr.sim(w = rep(2,p), A = A, C = C, N = 10000)
+@
+
+For this new Markov chain, we find an estimate of $\Sigma$ to use for the \texttt{qqTest} function.
+
+<<qq, out.width = '8cm'>>=
+mcerror_bm <- mcse.multi(chain, method = "bm")
+qqTest(x = chain, covmat = mcerror_bm$cov)
+@
+
+Thus, we see here that the chain has not quite reached asymptopia.
+\bibliographystyle{apalike}
+\bibliography{mcse}
+
+\end{document}
