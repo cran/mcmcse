@@ -23,6 +23,14 @@ mcse.multi(x, method = "bm", size = "sqroot", g = NULL, level = 0.95, large = FA
 
 \item{large}{if TRUE, returns the volume of the large sample confidence region using a chi square critical value.}
 }
+\seealso{
+  \code{\link{mcse}}, which acts on a vector.
+  \code{\link{mcse.mat}}, which applies \code{mcse} to each
+  column of a matrix or data frame.
+  \code{\link{mcse.q}} and \code{\link{mcse.q.mat}}, which
+  compute standard errors for quantiles.
+}
+
 \value{
 A list is returned with the following components,
 \item{cov}{a p by p covariance matrix estimate.}

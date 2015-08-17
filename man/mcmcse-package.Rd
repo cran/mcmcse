@@ -17,14 +17,16 @@ versus sample size.
 \tabular{ll}{
 Package: \tab mcmcse\cr
 Type: \tab Package\cr
-Version: \tab 1.1.1\cr
-Date: \tab 2015-07-30\cr
+Version: \tab 1.1-2\cr
+Date: \tab 2015-08-17\cr
 License: \tab GPL (>= 2)\cr
 }
 
 }
 \author{
-Dootika Vats
+James M. Flegal <jflegal@ucr.edu>,\\
+John Hughes <hughesj@umn.edu> and\\
+Dootika Vats <vatsx007@umn.edu>
 
 Maintainer: James M. Flegal <jflegal@ucr.edu>
 }

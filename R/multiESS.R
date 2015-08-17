@@ -24,12 +24,18 @@ multiESS <- function(x, covmat = NULL, g = NULL)
 	if(is.matrix(covmat))
 	{
 		var_mat <- cov(chain)
-		ess <- n*(det(var_mat)/det(covmat))^(1/p)
+		det.var.p <- prod(eigen(var_mat, only.values = TRUE)$values^(1/p))
+		det.covmat.p <- prod(eigen(covmat, only.values = TRUE)$values^(1/p))
+		ess <- n*(det.var.p/det.covmat.p)
 	} else
 	{
 		covmat <- mcse.multi(chain)$cov
 		var_mat <- cov(chain)
-		ess <- n*(det(var_mat)/det(covmat))^(1/p)
+
+		det.var.p <- prod(eigen(var_mat, only.values = TRUE)$values^(1/p))
+		det.covmat.p <- prod(eigen(covmat, only.values = TRUE)$values^(1/p))
+		ess <- n*(det.var.p/det.covmat.p)
+
 	}
 return(ess)
 

@@ -1,6 +1,6 @@
 \name{ess}
 \alias{ess}
-\title{Estimate effective sample size (ESS) as described in Kass et al. (1998) and Robert and Casella (2004; p. 500).}
+\title{Estimate effective sample size (ESS) as described in Gong and Felgal (2015).}
 \usage{
   ess(x, g = NULL)
 }

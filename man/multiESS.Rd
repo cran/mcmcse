@@ -5,7 +5,7 @@
 Effective Sample Size of a multivariate Markov chain.
 }
 \description{
-Calculates the effective sample size of the Markov chain, using the multivariate dependence structure of the process.
+Calculate the effective sample size of the Markov chain, using the multivariate dependence structure of the process.
 }
 \usage{
 multiESS(x, covmat = NULL, g = NULL)

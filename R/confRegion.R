@@ -13,7 +13,6 @@ confRegion <- function(mcse.obj, which = c(1,2), level = .95)
 
 	mu <- mcse.obj$est
 
-
-	return(ellipse(mat, center = mu[which], t = crit, which = which))       
+	return(ellipse(mat, centre = mu[which], t = sqrt(crit), which = which))       
 
 }
