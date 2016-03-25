@@ -1,3 +1,6 @@
+# sourceCpp("mbmC.cpp")
+# sourceCpp("msveC.cpp")
+
 mcse.multi <- function(x, method = "bm", size = "sqroot", g = NULL, level = 0.95, large = FALSE)
 { 
 
@@ -75,7 +78,8 @@ if (is.function(g))
    m <- n - b
   }
 
-  det.sig <- det(sig.mat)
+  log.dethalf.pth<- (1/(2*p))*sum(log(eigen(sig.mat, only.values = TRUE)$values))
+  # det.sig <- det(sig.mat)
   if(m - p +1 <=0)
   {
     warning("Not enough samples. Estimate need not be positive definite.")
@@ -85,9 +89,8 @@ if (is.function(g))
 
     crit <- ifelse(large, qchisq(level, df = p)/n,
               exp(log(p) + log(m) - log(n) - log(m-p+1) + log(qf(level, p, m-p+1))) )
-    foo <- log(2) + (p/2)*log(pi*crit) - log(p) - lgamma(p/2)
-    vol <- exp(foo + (1/2)*log(det.sig))
-    pth.vol <- (vol)^(1/p)
+    foo <- (1/p)*log(2) + (1/2)*log(pi*crit) - (1/p)*log(p) - (1/p)*lgamma(p/2)
+    pth.vol <- exp(foo+log.dethalf.pth)
 }
   return(list("cov" = sig.mat, "vol" = pth.vol, "est" = mu.hat, "nsim" = n, 
       "method" = method, "large" = large, "size" = b))

@@ -59,12 +59,24 @@ lines(confRegion(mcerror_bart, which = c(1,2), level = .90), col = "red")
 plot(confRegion(mcerror_bm, which = c(1,2), level = .95), type = 'l', asp = 1)
 lines(confRegion(mcerror_bm, which = c(1,2), level = .90), col = "red")
 
+## ----minESS--------------------------------------------------------------
+# For mu
+minESS(p = 3, alpha = .05, eps = .05)
+
+#For mu_g
+minESS(p = 1, alpha = .05, eps = .05)
+
 ## ----ess-----------------------------------------------------------------
 ess(chain)
 
 ## ----multiess------------------------------------------------------------
 multiESS(chain)
 multiESS(chain, covmat = mcerror_bart$cov)
+
+## ----moresamples---------------------------------------------------------
+set.seed(100)
+chain <- mAr.sim(w = rep(2,p), A = A, C = C, N = 28000)
+multiESS(chain)
 
 ## ----estvssamp, out.width = '8cm'----------------------------------------
 estvssamp(chain[,1])

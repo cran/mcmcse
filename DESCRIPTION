@@ -1,6 +1,6 @@
 Package: mcmcse
-Version: 1.1-2
-Date: 17-08-2015
+Version: 1.2-1
+Date: 2016-03-24
 Title: Monte Carlo Standard Errors for MCMC
 Author: James M. Flegal <jflegal@ucr.edu>, John Hughes
         <hughesj@umn.edu> and Dootika Vats <vatsx007@umn.edu>
@@ -18,8 +18,8 @@ License: GPL (>= 2)
 URL: http://faculty.ucr.edu/~jflegal ,
         http://www.biostat.umn.edu/~johnh,
         http://www.stat.umn.edu/~vatsx007
-Packaged: 2015-08-21 16:24:53 UTC; Dootika
-Repository: CRAN
 VignetteBuilder: knitr
-Date/Publication: 2015-08-25 00:44:47
+Repository: CRAN
 NeedsCompilation: yes
+Packaged: 2016-03-24 23:28:03 UTC; Dootika
+Date/Publication: 2016-03-25 20:01:01

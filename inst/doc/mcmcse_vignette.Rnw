@@ -63,7 +63,7 @@ set.seed(100)
 chain <- mAr.sim(w = rep(2,p), A = A, C = C, N = 10000)
 @
 
-For using the \texttt{mcmcse} package the rows of the MCMC output should store each iteration of the algorithm. Thus the output should have $n$ rows and $p$ columns. We will denote each row $i$ of the out put as $(y^{(1)}_i, y^{(2)}_i, y^{(3)}_i)$.
+For using the \texttt{mcmcse} package the rows of the MCMC output should store each iteration of the algorithm. Thus the output should have $n$ rows and $p$ columns. We will denote each row $i$ of the output as $(y^{(1)}_i, y^{(2)}_i, y^{(3)}_i)$.
 
 \bigskip
 This vignette will discuss estimating two sets of features of interest of $F$.
@@ -138,7 +138,7 @@ mcerror_tuk <- mcse.multi(x = chain, method =  "tukey",
 	\item \texttt{large} is a logical argument. If \texttt{large} is \texttt{TRUE} the volume of the confidence region is the large sample volume obtained using $\chi^2$ critical values. By default, volume is calculated using $F$ distribution critical values.
 \end{itemize}
 
-\texttt{mcse.multi} returns a list with multiple components. \texttt{cov} stores the estimate of $\Sigma$ obtained using the method chosen, \texttt{vol} returns the volume to the $p$th root of the resulting confidence region, \texttt{est} stores the estimate of $g$ applied on the Markov chain and \texttt{nsim}, \texttt{critical} and \texttt{size} are useful to remember the methods used to calculate $\Sigma$. 
+\texttt{mcse.multi} returns a list with multiple components. \texttt{cov} stores the estimate of $\Sigma$ obtained using the method chosen, \texttt{vol} returns the volume to the $p$th root of the resulting confidence region, \texttt{est} stores the estimate of $g$ applied on the Markov chain and \texttt{nsim}, \texttt{critical} and \texttt{size} store the arguments used to calculate $\Sigma$. 
 
 <<outputvalue>>=
 mcerror_bm$cov
@@ -212,6 +212,24 @@ lines(confRegion(mcerror_bm, which = c(1,2), level = .90), col = "red")
 
 \section{Effective Sample Size}
 
+Before sampling the Markov chain, the user is advised to used the function \texttt{minESS} to figure out how many minimum effective samples are needed for analysis. See \cite{vats:fleg:jones:2015b} for details. Since we have two quantities, $\mu$ and $\mu_g$, we will find the minimum samples required for each analysis.
+<<minESS>>= 
+# For mu
+minESS(p = 3, alpha = .05, eps = .05)
+
+#For mu_g
+minESS(p = 1, alpha = .05, eps = .05)
+@ 
+
+\begin{itemize}
+	\item \texttt{p} is the dimension of the estimation problem.
+	\item \texttt{alpha} is the confidence level
+	\item \texttt{eps} is the tolerance level. Default is .05. Reasonable levels are anywhere from .01 to .05. The smaller the tolerance, the larger the minimum effective samples.
+\end{itemize}
+
+\texttt{minESS} is independent of the Markov chain or process, and is only a function of the  $p$, $\alpha$, and $\epsilon$. The user should find \texttt{minESS} and then sample their process until the required minimum samples are achieved. 
+
+
 \texttt{multiESS} and \texttt{ess} are two functions that calculate the effective sample size of a correlated sample. \texttt{ess} calculations are based on \cite{gong2015practical} and is component-wise, and \texttt{multiESS} utilizes the multivariate nature of the problem.
 
 <<ess>>=
@@ -224,6 +242,19 @@ Since \texttt{ess} produces a different estimate for each component, conservativ
 multiESS(chain)
 multiESS(chain, covmat = mcerror_bart$cov)
 @
+
+Since the effective sample size is less than the minimum effective samples, we should simulate more. Looking at the ratio of the Monte Carlo samples size of $10^4$ and multiESS, we might need around $28,000$ Monte Carlo samples. 
+
+<<moresamples>>=
+set.seed(100)
+chain <- mAr.sim(w = rep(2,p), A = A, C = C, N = 28000)
+multiESS(chain)
+@
+
+We see that the effective samples is now larger than the minimum effective samples, so we know 28,000 are enough.
+
+\textbf{NOTE:} Ideally, we do not want to get more samples using the last iteration of the previous Markov chain. However, \texttt{mAr.sim} does not allow user specified starting values, so to demonstrate the use of \texttt{minESS} and \texttt{multiESS}, we get a new sample altogether. When making \texttt{R} packages that simulate a Markov chain, it is often very useful to allow user specific starting values for this reason.
+
 
 \section{Graphical Diagnostics}
 

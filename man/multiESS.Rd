@@ -45,5 +45,10 @@ multiESS(out)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+
+
+\seealso{
+  \code{\link{minESS}}, which calculates the minimum effective samples required for the problem.
+
+  \code{\link{ess}} which calculates univariate effective sample size using a Markov chain and a function g.
+}

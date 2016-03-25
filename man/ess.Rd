@@ -45,3 +45,8 @@ Gong, L. and Flegal, J. M. (2015) A practical sequential stopping rule for high-
   % \emph{Statistical Science}, \bold{7}, 473--483.
 }
 
+\seealso{
+  \code{\link{minESS}}, which calculates the minimum effective samples required for the problem.
+  
+  \code{\link{multiESS}}, which calculates multivariate effective sample size using a Markov chain and a function g.
+}

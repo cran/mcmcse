@@ -52,10 +52,14 @@ Maintainer: James M. Flegal <jflegal@ucr.edu>
   \emph{University of California, Riverside, Technical
   Report}.
 
+  Gong, L., and Flegal, J. M. A practical sequential stopping rule for high-dimensional Markov chain Monte Carlo. Journal of Computational and Graphical Statistics (to appear).
+  
   Jones, G. L., Haran, M., Caffo, B. S. and Neath, R.
   (2006) Fixed-width output analysis for Markov chain Monte
   Carlo. \emph{Journal of the American Statistical
   Association}, \bold{101}, 1537--1547.
+
+  Vats, D., Flegal, J. M., and, Jones, G. L Multivariate Output Analysis for Markov chain Monte Carlo, \emph{arXiv preprint arXiv:1512.07713 (2015)}.
 }
 
 \examples{
