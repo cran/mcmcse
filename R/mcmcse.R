@@ -367,7 +367,7 @@ estvssamp = function(x, g = mean, main = "Estimates vs Sample Size", add = FALSE
 #     length(x) / time
 # }
 
-ess <- function(x, g = NULL)
+ess <- function(x, g = NULL, ...)
 {
     chain <- as.matrix(x)
 
@@ -379,7 +379,7 @@ ess <- function(x, g = NULL)
 
     lambda <- apply(chain, 2, var)
 
-    sigma <- (mcse.mat(chain)[,2])^2*n
+    sigma <- as.numeric((mcse.mat(chain,...)[,2])^2*n)
 
     return(n*lambda/sigma)
 }

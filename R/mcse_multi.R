@@ -57,7 +57,7 @@ if (is.function(g))
   ## Batch Means
   if(method == "bm")
   {
-    sig.mat <- mbmC(chain, b)
+    sig.mat <- mbmc(chain, b)
     m <- a - 1
   }
   
@@ -66,7 +66,7 @@ if (is.function(g))
   if(method == "bartlett")
   {
    chain <- scale(chain, center = mu.hat, scale = FALSE)
-   sig.mat <- msveC(chain, b, "bartlett")
+   sig.mat <- msvec(chain, b, "bartlett")
    m <- n - b
   }
 
@@ -74,19 +74,23 @@ if (is.function(g))
   if(method == "tukey")
   {
    chain <- scale(chain, center = mu.hat, scale = FALSE)
-   sig.mat <- msveC(chain, b, "tukey")
+   sig.mat <- msvec(chain, b, "tukey")
    m <- n - b
   }
 
-  log.dethalf.pth<- (1/(2*p))*sum(log(eigen(sig.mat, only.values = TRUE)$values))
-  # det.sig <- det(sig.mat)
+
   if(m - p +1 <=0)
   {
-    warning("Not enough samples. Estimate need not be positive definite.")
+    warning("Not enough samples. Estimate is not positive definite. ")
     pth.vol <- NaN
   } else
   {
-
+    sig.eigen <- eigen(sig.mat, only.values = TRUE)$values
+    if(min(sig.eigen) <= 0)
+    {
+      warning("You either need more samples or x is not full column rank")
+    }
+    log.dethalf.pth<- (1/(2*p))*sum(log(sig.eigen))
     crit <- ifelse(large, qchisq(level, df = p)/n,
               exp(log(p) + log(m) - log(n) - log(m-p+1) + log(qf(level, p, m-p+1))) )
     foo <- (1/p)*log(2) + (1/2)*log(pi*crit) - (1/p)*log(p) - (1/p)*lgamma(p/2)

@@ -6,7 +6,7 @@ using namespace Rcpp;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-mat mbmC(const arma::mat& chain, double b)
+mat mbmc(const arma::mat& chain, double b)
 {
   int n = chain.n_rows;
   int p = chain.n_cols;

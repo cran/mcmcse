@@ -1,11 +1,13 @@
 Package: mcmcse
-Version: 1.2-1
-Date: 2016-03-24
+Version: 1.3-1
+Date: 2017-06-06
 Title: Monte Carlo Standard Errors for MCMC
-Author: James M. Flegal <jflegal@ucr.edu>, John Hughes
-        <hughesj@umn.edu> and Dootika Vats <vatsx007@umn.edu>
-Maintainer: James M. Flegal <jflegal@ucr.edu>
-Imports: utils, ellipse, Rcpp (>= 0.11.3)
+Author: James M. Flegal <jflegal@ucr.edu>, 
+	John Hughes <j.hughes@ucdenver.edu>, 
+	Dootika Vats <D.Vats@warwick.ac.uk>, and 
+	Ning Dai <daixx224@umn.edu>
+Maintainer: Dootika Vats <D.Vats@warwick.ac.uk>
+Imports: utils, ellipse, Rcpp (>= 0.12.10)
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: testthat, mAr, knitr
 Description: Provides tools for computing Monte Carlo standard
@@ -15,11 +17,10 @@ Description: Provides tools for computing Monte Carlo standard
 	functions for computing effective sample size and for plotting
 	Monte Carlo estimates versus sample size.
 License: GPL (>= 2)
-URL: http://faculty.ucr.edu/~jflegal ,
-        http://www.biostat.umn.edu/~johnh,
-        http://www.stat.umn.edu/~vatsx007
+URL: http://faculty.ucr.edu/~jflegal , http://johnhughes.org,
+        http://www2.warwick.ac.uk/fac/sci/statistics/crism/visitors/vats
 VignetteBuilder: knitr
 Repository: CRAN
 NeedsCompilation: yes
-Packaged: 2016-03-24 23:28:03 UTC; Dootika
-Date/Publication: 2016-03-25 20:01:01
+Packaged: 2017-07-01 12:59:56 UTC; Dootika
+Date/Publication: 2017-07-01 14:55:50 UTC

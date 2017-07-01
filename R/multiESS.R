@@ -1,4 +1,4 @@
-multiESS <- function(x, covmat = NULL, g = NULL)
+multiESS <- function(x, covmat = NULL, g = NULL, ...)
 {
 
 	chain <- as.matrix(x)
@@ -29,7 +29,7 @@ multiESS <- function(x, covmat = NULL, g = NULL)
 		ess <- n*(det.var.p/det.covmat.p)
 	} else
 	{
-		covmat <- mcse.multi(chain)$cov
+		covmat <- mcse.multi(chain, ...)$cov
 		var_mat <- cov(chain)
 
 		det.var.p <- prod(eigen(var_mat, only.values = TRUE)$values^(1/p))

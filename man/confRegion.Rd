@@ -2,7 +2,7 @@
 \alias{confRegion}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Confidence regions (ellipses) from Markov chain Monte Carlo
+Confidence regions (ellipses) for Monte Carlo estimates
 }
 \description{
 Constructs confidence regions (ellipses) from the Markov chain output for the features of interest. Function uses the ellipse package.
@@ -12,7 +12,7 @@ confRegion(mcse.obj, which = c(1,2), level = .95)
 }
 
 \arguments{
-\item{mcse.obj}{the list returned by the \code{mcse.multi} command}
+\item{mcse.obj}{the list returned by the \code{mcse.multi} or \code{mcse.initseq} command}
 \item{which}{integer vector of length 2 indicating the component for which to make the confidence ellipse. Chooses the first two by default.}
 
 \item{level}{confidence level for the ellipse}

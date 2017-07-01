@@ -6,8 +6,7 @@
     method = c("bm", "obm", "sub"))
 }
 \arguments{
-  \item{x}{a matrix or data frame with each row being a
-  draw from the multivariate distribution of interest.}
+\item{x}{a matrix or data frame of Markov chain output. Number of rows is the Monte Carlo sample size.}
 
   \item{q}{the quantile of interest.}
 

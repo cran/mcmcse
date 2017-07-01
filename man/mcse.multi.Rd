@@ -2,7 +2,7 @@
 \alias{mcse.multi}
 \docType{package}
 \title{
-Multivariate Monte Carlo Standard Errors Estimation.
+Multivariate Monte Carlo standard errors for expectations.
 }
 \description{
 Function returns the estimate of the covariance matrix in the Markov Chain CLT using batch means or spectral variance methods (with different lag windows). The function also returns the volume of the resulting ellipsoidal confidence regions. 
@@ -11,7 +11,7 @@ Function returns the estimate of the covariance matrix in the Markov Chain CLT u
 mcse.multi(x, method = "bm", size = "sqroot", g = NULL, level = 0.95, large = FALSE)	
 }
 \arguments{
-\item{x}{an n by p matrix that of the Markov chain output}
+\item{x}{a matrix or data frame of Markov chain output. Number of rows is the Monte Carlo sample size.}
 
 \item{method}{any of \code{``bm'', ``bartlett'', ``tukey''}. \code{``bm''} represents batch means estimator,  \code{``bartlett''} and \code{``tukey''} represents the modified-Bartlett window and the Tukey-Hanning windows for the spectral variance estimators. }
 
@@ -24,6 +24,7 @@ mcse.multi(x, method = "bm", size = "sqroot", g = NULL, level = 0.95, large = FA
 \item{large}{if TRUE, returns the volume of the large sample confidence region using a chi square critical value.}
 }
 \seealso{
+  \code{\link{mcse.initseq}}, which computes an initial sequence estimator.
   \code{\link{mcse}}, which acts on a vector.
   \code{\link{mcse.mat}}, which applies \code{mcse} to each
   column of a matrix or data frame.
@@ -33,13 +34,18 @@ mcse.multi(x, method = "bm", size = "sqroot", g = NULL, level = 0.95, large = FA
 
 \value{
 A list is returned with the following components,
-\item{cov}{a p by p covariance matrix estimate.}
+\item{cov}{a covariance matrix estimate.}
 \item{vol}{volume of the confidence ellipsoid to the pth root.}
 \item{est}{estimate of g(x).}
 \item{nsim}{number of rows of the input \code{x}.}
 \item{method}{method used to calculate matrix \code{cov}.}
 \item{large}{logical of whether a large sample confidence region volume was calculated.}
 \item{size}{value of size used to calculate \code{cov}.}
+}
+\references{
+ Vats, D., Flegal, J. M., and, Jones, G. L Multivariate Output Analysis for Markov chain Monte Carlo, \emph{arXiv preprint arXiv:1512.07713 (2015)}.
+
+  Vats, D., Flegal, J. M., and, Jones, G. L. (2017+) Strong Consistency of multivariate spectral variance estimators for Markov chain Monte Carlo, \emph{Bernoulli}.
 }
 \examples{
 library(mAr)

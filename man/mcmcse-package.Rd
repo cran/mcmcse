@@ -17,24 +17,28 @@ versus sample size.
 \tabular{ll}{
 Package: \tab mcmcse\cr
 Type: \tab Package\cr
-Version: \tab 1.1-2\cr
-Date: \tab 2015-08-17\cr
+Version: \tab 1.3-1\cr
+Date: \tab 2017-06-06\cr
 License: \tab GPL (>= 2)\cr
 }
 
 }
 \author{
 James M. Flegal <jflegal@ucr.edu>,\\
-John Hughes <hughesj@umn.edu> and\\
-Dootika Vats <vatsx007@umn.edu>
+John Hughes <j.hughes@ucdenver.edu> \\
+Dootika Vats <D.Vats@warwick.ac.uk> and\\
+Ning Dai <daixx224@umn.edu>
 
-Maintainer: James M. Flegal <jflegal@ucr.edu>
+Maintainer: Dootika Vats <D.Vats@warwick.ac.uk>
 }
 \references{
+
+  Dai, N and Jones, G.L. (2017+)  Multivariate initial sequence estimators in Markov chain Monte Carlo, \emph{ Journal of Multivariate Analysis}.
+  
   Flegal, J. M. (2012) Applicability of subsampling
   bootstrap methods in Markov chain Monte Carlo. In
   Wozniakowski, H. and Plaskota, L., editors, \emph{Monte
-  Carlo and Quasi-Monte Carlo Methods 2010} (to appear).
+  Carlo and Quasi-Monte Carlo Methods 2010}, pages 363--372.
   Springer-Verlag.
 
   Flegal, J. M. and Jones, G. L. (2010) Batch means and
@@ -60,6 +64,9 @@ Maintainer: James M. Flegal <jflegal@ucr.edu>
   Association}, \bold{101}, 1537--1547.
 
   Vats, D., Flegal, J. M., and, Jones, G. L Multivariate Output Analysis for Markov chain Monte Carlo, \emph{arXiv preprint arXiv:1512.07713 (2015)}.
+
+  Vats, D., Flegal, J. M., and, Jones, G. L. (2017+) Strong Consistency of multivariate spectral variance estimators for Markov chain Monte Carlo, \emph{Bernoulli}.
+
 }
 
 \examples{
