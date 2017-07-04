@@ -1,5 +1,5 @@
 940b7a5c22a06af0f2e215fbf150a7f2 *COPYING
-9a52f8876454fcb4d173f37f0bdf2540 *DESCRIPTION
+359be53b7d6798ca60aef2d2ef963345 *DESCRIPTION
 0787f8942b3cbd4baffbce36af15f195 *NAMESPACE
 8342c6fef1f208095a02549e79230700 *R/RcppExports.R
 4e0ccc16b5a54129d446ab55758a0886 *R/confRegion.R
@@ -14,11 +14,11 @@ f0875f041ddd9a1d9701d9f3c88c71f6 *build/vignette.rds
 a587222be19dcfe4bcfdf585316f6620 *inst/CITATION
 5ed296c562dc4f123d212c594d4c7a97 *inst/doc/mcmcse_vignette.R
 b26df23e661ae1ce8a128533347afae2 *inst/doc/mcmcse_vignette.Rnw
-9ba2d4a6205bb62d9b63c10dc91c17af *inst/doc/mcmcse_vignette.pdf
+66917fd3ef00cdf23ed22d83d208d3a5 *inst/doc/mcmcse_vignette.pdf
 25805dee4288ce33d5af89c63b058681 *man/confRegion.Rd
 ed8685584b5e3cf29283cd1ab431d9f3 *man/ess.Rd
 335bd129f322ede6e02fa7cca8b51254 *man/estvssamp.Rd
-a64043a6e507188a5b2f5697139e598b *man/mcmcse-package.Rd
+c84cf119e6a5f78a8bd2e3ecf252c840 *man/mcmcse-package.Rd
 cc2379d7cc4641e2e2368c89b4d380d2 *man/mcse.Rd
 b6bdbd501a475c59f8ed95fe52c0b788 *man/mcse.initseq.Rd
 6b77637d6ba5b6e8d7acf73332d268dd *man/mcse.mat.Rd
@@ -32,7 +32,7 @@ d2e16d8c58a678ba2d2b60dc01b92e78 *man/qqTest.Rd
 9bc5aa7d4334d43640f515c9a1fd70bd *src/Makevars.win
 53f68ce084fda508e802826bebe302cb *src/RcppExports.cpp
 f9937d2979ee6a18860c9548d1a9cd63 *src/init.c
-328ae3649b7a14e4fe6670bd2a842e27 *src/inseq.cpp
+6eb1c603c57e4bd04bebb882a3988802 *src/inseq.cpp
 8a175c24fd98005c2cd8c9e3a60359bc *src/mbmc.cpp
 a81772a61fdf3a28e72091ae4d7b22ba *src/msvec.cpp
 9c3536b1b3bbf056f0bcffeaefab2bd6 *tests/testthat.R

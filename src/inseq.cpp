@@ -21,7 +21,7 @@ List inseq(mat M, bool adjust=true)
   //store the eigenvalues and eigenvectors of each Gam
   vec eigval(p),eigvalneg(p);
   double dtm;
-  int sn=floor(n/2); 
+  int sn= n/2; 
   for (m=0; m<n/2; m++)
   {
     gam0.zeros(); gam1.zeros();

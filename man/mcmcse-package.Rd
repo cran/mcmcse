@@ -17,8 +17,8 @@ versus sample size.
 \tabular{ll}{
 Package: \tab mcmcse\cr
 Type: \tab Package\cr
-Version: \tab 1.3-1\cr
-Date: \tab 2017-06-06\cr
+Version: \tab 1.3-2\cr
+Date: \tab 2017-07-03\cr
 License: \tab GPL (>= 2)\cr
 }
 
