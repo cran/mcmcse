@@ -6,11 +6,11 @@ using namespace Rcpp;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-mat mbmC(const arma::mat& chain, double b)
+mat mobmC(const arma::mat& chain, double b)
 {
   int n = chain.n_rows;
   int p = chain.n_cols;
-  int a = floor(n/b);
+  int a = n-b+1;
 
   // y_mean will store the overall mean vector
   vec y_mean(p);
@@ -31,7 +31,7 @@ mat mbmC(const arma::mat& chain, double b)
   // idx will be used to find block_means. Helps bypass a double loop
   IntegerVector foo = seq_len(a);
   uvec idx = as<uvec>(foo) - 1;
-  idx = idx*b;
+  // idx = idx*b;
 
  // Find Block means
   for(int i = 0; i < b; ++i)
@@ -56,5 +56,5 @@ mat mbmC(const arma::mat& chain, double b)
   }
 
   out += trans(block_means - mean_mat)*(block_means - mean_mat);
-  return(out*b/(a-1));
+  return(out*b/n);
 }

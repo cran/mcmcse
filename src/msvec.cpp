@@ -19,7 +19,7 @@ double lag(int s, double b, String method)
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-mat msvec(const arma::mat& chain, double b, String method = "bartlett")
+mat msveC(const arma::mat& chain, double b, String method = "bartlett")
 {
   int n = chain.n_rows;
   int p = chain.n_cols;
