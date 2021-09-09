@@ -1,28 +1,27 @@
 ## ----var----------------------------------------------------------------------
-library(mAr)
-p <- 3
-A <- diag(c(.1, .5, .8))
-C <- diag(rep(2, 3))
+library(mcmcse)
+mu = c(2, 50)
+sigma = matrix(c(1, 0.5, 0.5, 1), nrow = 2)
 
 # Monte Carlo sample size is N
-N <- 1e5
+N <- 5e3
 set.seed(100)
-chain <- mAr.sim(w = rep(2,p), A = A, C = C, N = N)
+chain <- BVN_Gibbs(n = N, mu = mu, sigma = sigma)
 
 ## ----foo, echo = FALSE--------------------------------------------------------
-colnames(chain) <- c("Y1", "Y2", "Y3")
+  colnames(chain) <- c("Y1", "Y2")
 
 ## ----output-------------------------------------------------------------------
 #Rows has observations (samples) and each comlumn is a component. 
 head(chain)
 
 ## ----means--------------------------------------------------------------------
- colMeans(chain)
+colMeans(chain)
 
 ## ----g------------------------------------------------------------------------
 g <- function(x)
 {
-	return(sum(x^2))
+  return(sum(x^2))
 }
 
 ## ----g_est--------------------------------------------------------------------
@@ -33,23 +32,25 @@ gofy <- apply(chain, 1, g)
 mean(gofy)
 
 ## ----mcse---------------------------------------------------------------------
-library(mcmcse)
-
 # Batch means estimator
 mcerror_bm <- mcse.multi(x = chain, method =  "bm", r = 1,
-	size = NULL, g = NULL, adjust = TRUE, blather = TRUE)
+                         size = NULL, g = NULL, adjust = TRUE, 
+                         blather = TRUE)
 
 # Overlapping batch means estimator
-mcerror_bm <- mcse.multi(x = chain, method =  "obm", r = 1,
-	size = NULL, g = NULL, adjust = TRUE, blather = TRUE)
+mcerror_obm <- mcse.multi(x = chain, method =  "obm", r = 1,
+                         size = NULL, g = NULL, adjust = TRUE, 
+                         blather = TRUE)
 
 # Spectral variance estimator with Bartlett window
 mcerror_bart <- mcse.multi(x = chain, method =  "bartlett", r = 1,
-	size = NULL, g = NULL, adjust = TRUE, blather = TRUE)
+                           size = NULL, g = NULL, adjust = TRUE, 
+                           blather = TRUE)
 
 # Spectral variance estimator with Tukey window
 mcerror_tuk <- mcse.multi(x = chain, method =  "tukey", r = 1,
-	size = NULL, g = NULL, adjust = TRUE, blather = TRUE)
+                          size = NULL, g = NULL, adjust = TRUE, 
+                          blather = TRUE)
 
 # Initial sequence estimator, unadjusted
 mcerror_is <- mcse.initseq(x = chain, g = NULL, 
@@ -58,20 +59,6 @@ mcerror_is <- mcse.initseq(x = chain, g = NULL,
 # Initial sequence estimator, adjusted
 mcerror_isadj <- mcse.initseq(x = chain, g = NULL, 
                               adjust = TRUE, blather = TRUE)
-
-## ----outputvalue--------------------------------------------------------------
-mcerror_bm$cov
-
-mcerror_bart$cov
-
-mcerror_tuk$cov
-
-mcerror_is$cov
-
-mcerror_isadj$cov.adj
-
-rbind(mcerror_bm$est, mcerror_bart$est, mcerror_tuk$est,
-      mcerror_is$est, mcerror_isadj$est)
 
 ## ----uni----------------------------------------------------------------------
 mcse(x = chain[,1], method = "bm", g = NULL)
@@ -102,14 +89,14 @@ lines(confRegion(mcerror_is, which = c(1,2), level = .90), col = "red")
 
 ## ----minESS-------------------------------------------------------------------
 # For mu
-minESS(p = 3, alpha = .05, eps = .05)
+minESS(p = 2, alpha = .05, eps = .05)
 
 #For mu_g
 minESS(p = 1, alpha = .05, eps = .05)
 
 ## ----eps----------------------------------------------------------------------
 # For mu
-minESS(p = 3, alpha = .05, ess = 1000)
+minESS(p = 2, alpha = .05, ess = 1000)
 
 #For mu_g
 minESS(p = 1, alpha = .05, ess = 1000)
@@ -126,31 +113,17 @@ multiESS(chain, covmat = mcerror_is$cov)
 
 ## ----moresamples--------------------------------------------------------------
 set.seed(100)
-chain <- mAr.sim(w = rep(2,p), A = A, C = C, N = 28000)
+chain <- BVN_Gibbs(1e4, mu, sigma)
 
-# larger than 8123
+# larger than 7529
 multiESS(chain)
 
-# larger than 8123
+# larger than 7529
 multiESS(chain, covmat = mcerror_bart$cov)
 
-# larger than 8123
+# larger than 7529
 multiESS(chain, covmat = mcerror_is$cov)
 
 ## ----estvssamp, out.width = '8cm'---------------------------------------------
 estvssamp(chain[,1])
-
-## ----qqbig--------------------------------------------------------------------
-p <- 50
-A <- diag(seq(.1, .9, length = p))
-C <- diag(rep(2, p))
-
-set.seed(100)
-chain <- mAr.sim(w = rep(2,p), A = A, C = C, N = 10000)
-
-## ----qq, out.width = '8cm'----------------------------------------------------
-mcerror_bm <- mcse.multi(chain, method = "bm", blather = TRUE)
-mcerror_isadj <- mcse.initseq(chain, adjust = TRUE, blather = TRUE)
-qqTest(mcerror_bm)
-qqTest(mcerror_isadj)
 
